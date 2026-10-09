@@ -1,0 +1,505 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>VIVINO GAMES — Play Happy</title>
+<meta name="description" content="Bite-sized casual games from VIVINO GAMES. Puzzles, merges, and arcade fun you can play anywhere." />
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Nunito:wght@400;700&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #fff8f0;
+    --ink: #2b1d3a;
+    --muted: #6c5f7a;
+    --grape: #7b2cbf;
+    --berry: #e0457b;
+    --sun: #ffb703;
+    --mint: #2ec4b6;
+    --sky: #4cc9f0;
+    --card: #ffffff;
+    --radius: 24px;
+    --shadow: 0 10px 30px rgba(43, 29, 58, 0.12);
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  body {
+    font-family: "Nunito", system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--ink);
+    line-height: 1.6;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, .logo, .btn { font-family: "Fredoka", "Nunito", sans-serif; }
+  a { color: inherit; text-decoration: none; }
+  .wrap { max-width: 1180px; margin: 0 auto; padding: 0 24px; }
+
+  /* ---------- Nav ---------- */
+  nav {
+    position: sticky; top: 0; z-index: 50;
+    background: rgba(255, 248, 240, 0.85);
+    backdrop-filter: blur(10px);
+    border-bottom: 1px solid rgba(43, 29, 58, 0.06);
+  }
+  nav .wrap { display: flex; align-items: center; justify-content: space-between; height: 72px; }
+  .logo { display: flex; align-items: center; gap: 10px; font-weight: 700; font-size: 1.4rem; letter-spacing: 0.5px; }
+  .logo-mark {
+    width: 40px; height: 40px; border-radius: 12px;
+    background: linear-gradient(135deg, var(--grape), var(--berry));
+    display: grid; place-items: center; color: #fff; font-size: 1.3rem;
+    box-shadow: 0 4px 12px rgba(123, 44, 191, 0.35);
+    transform: rotate(-6deg);
+  }
+  .logo span { color: var(--grape); }
+  .nav-links { display: flex; gap: 28px; font-weight: 700; color: var(--muted); }
+  .nav-links a:hover { color: var(--grape); }
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    padding: 12px 24px; border-radius: 999px; border: none; cursor: pointer;
+    font-weight: 600; font-size: 1rem;
+    transition: transform .15s ease, box-shadow .15s ease;
+  }
+  .btn:hover { transform: translateY(-2px); }
+  .btn-primary { background: var(--grape); color: #fff; box-shadow: 0 6px 18px rgba(123, 44, 191, 0.35); }
+  .btn-ghost { background: #fff; color: var(--ink); box-shadow: var(--shadow); }
+
+  /* ---------- Hero ---------- */
+  .hero { position: relative; padding: 80px 0 110px; overflow: hidden; }
+  .hero .wrap { display: grid; grid-template-columns: 1.1fr 1fr; gap: 48px; align-items: center; }
+  .pill {
+    display: inline-block; padding: 6px 14px; border-radius: 999px;
+    background: #ffe9c2; color: #9a5b00; font-weight: 700; font-size: .85rem; margin-bottom: 18px;
+  }
+  .hero h1 { font-size: clamp(2.6rem, 5.5vw, 4.4rem); line-height: 1.05; margin-bottom: 20px; }
+  .hero h1 .grad {
+    background: linear-gradient(90deg, var(--grape), var(--berry), var(--sun));
+    -webkit-background-clip: text; background-clip: text; color: transparent;
+  }
+  .hero p { font-size: 1.2rem; color: var(--muted); max-width: 520px; margin-bottom: 32px; }
+  .hero-ctas { display: flex; gap: 14px; flex-wrap: wrap; }
+  .stats { display: flex; gap: 36px; margin-top: 44px; }
+  .stat b { display: block; font-family: "Fredoka"; font-size: 2rem; color: var(--grape); }
+  .stat small { color: var(--muted); font-weight: 700; }
+
+  .blob { position: absolute; border-radius: 50%; filter: blur(60px); opacity: .45; z-index: -1; }
+  .blob.a { width: 420px; height: 420px; background: var(--berry); top: -120px; right: -80px; }
+  .blob.b { width: 360px; height: 360px; background: var(--sky); bottom: -140px; left: -100px; }
+
+  /* Phone mockup */
+  .phone-stage { position: relative; height: 520px; }
+  .phone {
+    position: absolute; width: 250px; height: 500px; border-radius: 40px;
+    background: var(--ink); padding: 12px; box-shadow: 0 30px 60px rgba(43,29,58,.3);
+  }
+  .phone .screen { width: 100%; height: 100%; border-radius: 30px; overflow: hidden; position: relative; }
+  .phone.p1 { left: 30px; top: 10px; transform: rotate(-8deg); animation: bob 5s ease-in-out infinite; }
+  .phone.p2 { right: 20px; top: 20px; transform: rotate(7deg); animation: bob 5s ease-in-out infinite 1.2s; }
+  @keyframes bob { 0%,100% { translate: 0 0; } 50% { translate: 0 -14px; } }
+
+  .screen.s1 { background: linear-gradient(180deg, #ffd6e7, #ffb3d1); display: grid; grid-template-columns: repeat(5, 1fr); gap: 6px; padding: 60px 14px 14px; align-content: start; }
+  .screen.s1 .gem { aspect-ratio: 1; border-radius: 10px; box-shadow: inset 0 -4px 0 rgba(0,0,0,.15); }
+  .screen.s2 { background: linear-gradient(180deg, #c8f7f1, #8ee3d9); }
+  .screen .hud {
+    position: absolute; top: 16px; left: 14px; right: 14px; display: flex; justify-content: space-between;
+    font-family: "Fredoka"; font-weight: 700; color: #fff; font-size: .9rem; text-shadow: 0 2px 0 rgba(0,0,0,.15);
+  }
+  .float-emoji { position: absolute; font-size: 2.8rem; animation: bob 4s ease-in-out infinite; filter: drop-shadow(0 6px 8px rgba(0,0,0,.15)); }
+
+  /* ---------- Sections ---------- */
+  section { padding: 90px 0; }
+  .section-head { text-align: center; max-width: 640px; margin: 0 auto 52px; }
+  .section-head h2 { font-size: clamp(2rem, 4vw, 2.8rem); line-height: 1.15; margin-bottom: 12px; }
+  .section-head p { color: var(--muted); font-size: 1.1rem; }
+
+  /* Filter chips */
+  .chips { display: flex; justify-content: center; gap: 10px; flex-wrap: wrap; margin-bottom: 36px; }
+  .chip {
+    padding: 8px 18px; border-radius: 999px; border: 2px solid rgba(43,29,58,.12);
+    background: #fff; font-weight: 700; cursor: pointer; font-family: "Nunito"; font-size: .95rem; color: var(--muted);
+  }
+  .chip.active { background: var(--ink); color: #fff; border-color: var(--ink); }
+
+  /* Game cards */
+  .games { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); gap: 26px; }
+  .game {
+    background: var(--card); border-radius: var(--radius); overflow: hidden; box-shadow: var(--shadow);
+    transition: transform .2s ease, box-shadow .2s ease; display: flex; flex-direction: column;
+  }
+  .game:hover { transform: translateY(-6px) rotate(-0.5deg); box-shadow: 0 18px 40px rgba(43,29,58,.18); }
+  .game.hide { display: none; }
+  .game-art { height: 170px; display: grid; place-items: center; font-size: 4.5rem; position: relative; }
+  .game-art .tag {
+    position: absolute; top: 14px; left: 14px; background: rgba(255,255,255,.9);
+    padding: 4px 10px; border-radius: 999px; font-size: .75rem; font-weight: 700;
+  }
+  .game-art .new { left: auto; right: 14px; background: var(--sun); color: var(--ink); }
+  .game-body { padding: 20px 22px 22px; display: flex; flex-direction: column; flex: 1; }
+  .game-body h3 { font-size: 1.35rem; margin-bottom: 4px; }
+  .game-body p { color: var(--muted); font-size: .95rem; flex: 1; }
+  .game-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 16px; }
+  .rating { font-weight: 700; color: #c48a00; }
+  .play-btn { padding: 8px 18px; font-size: .9rem; background: var(--ink); color: #fff; }
+
+  /* Features */
+  .features { background: var(--ink); color: #fff; border-radius: 40px; margin: 0 24px; }
+  .features .section-head p { color: #c9bdd8; }
+  .feat-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 22px; }
+  .feat { background: rgba(255,255,255,.06); border-radius: var(--radius); padding: 28px; }
+  .feat .ico { width: 54px; height: 54px; border-radius: 16px; display: grid; place-items: center; font-size: 1.6rem; margin-bottom: 16px; }
+  .feat h3 { font-size: 1.2rem; margin-bottom: 6px; }
+  .feat p { color: #c9bdd8; font-size: .95rem; }
+
+  /* Mini game */
+  .mini { display: grid; grid-template-columns: 1fr 1fr; gap: 48px; align-items: center; }
+  .mini h2 { font-size: clamp(2rem, 4vw, 2.6rem); line-height: 1.15; margin-bottom: 14px; }
+  .mini p { color: var(--muted); font-size: 1.1rem; margin-bottom: 22px; }
+  .board-wrap { background: #fff; border-radius: 32px; box-shadow: var(--shadow); padding: 22px; }
+  .board-hud { display: flex; justify-content: space-between; font-family: "Fredoka"; font-weight: 700; margin-bottom: 14px; font-size: 1.1rem; }
+  #board {
+    position: relative; height: 340px; border-radius: 20px; overflow: hidden; cursor: crosshair;
+    background: linear-gradient(180deg, #e9f8ff, #d3f1ff);
+  }
+  .bubble {
+    position: absolute; border-radius: 50%; cursor: pointer; display: grid; place-items: center;
+    font-size: 1.4rem; user-select: none;
+    box-shadow: inset -6px -8px 0 rgba(0,0,0,.08), inset 6px 6px 10px rgba(255,255,255,.6);
+    transition: transform .12s ease;
+  }
+  .bubble:hover { transform: scale(1.08); }
+  .bubble.pop { animation: pop .25s forwards; }
+  @keyframes pop { to { transform: scale(1.6); opacity: 0; } }
+  .board-overlay {
+    position: absolute; inset: 0; display: grid; place-items: center; text-align: center;
+    background: rgba(255,255,255,.75); backdrop-filter: blur(4px); z-index: 5;
+  }
+  .board-overlay h3 { font-size: 1.6rem; margin-bottom: 10px; }
+
+  /* Testimonials */
+  .quotes { display: grid; grid-template-columns: repeat(3, 1fr); gap: 22px; }
+  .quote { background: #fff; border-radius: var(--radius); padding: 28px; box-shadow: var(--shadow); }
+  .quote p { font-size: 1.05rem; margin-bottom: 16px; }
+  .quote .who { display: flex; align-items: center; gap: 12px; font-weight: 700; }
+  .avatar { width: 42px; height: 42px; border-radius: 50%; display: grid; place-items: center; font-size: 1.3rem; }
+  .stars { color: #f5a500; letter-spacing: 2px; }
+
+  /* CTA */
+  .cta {
+    background: linear-gradient(120deg, var(--grape), var(--berry));
+    border-radius: 40px; color: #fff; text-align: center; padding: 70px 30px; position: relative; overflow: hidden;
+  }
+  .cta h2 { font-size: clamp(2rem, 4.5vw, 3rem); margin-bottom: 12px; }
+  .cta p { opacity: .9; font-size: 1.15rem; margin-bottom: 30px; }
+  .stores { display: flex; justify-content: center; gap: 14px; flex-wrap: wrap; }
+  .store {
+    background: #000; color: #fff; border-radius: 14px; padding: 10px 22px; display: flex; align-items: center; gap: 10px; text-align: left;
+    transition: transform .15s ease;
+  }
+  .store:hover { transform: translateY(-2px); }
+  .store small { display: block; font-size: .7rem; opacity: .8; line-height: 1; }
+  .store b { font-family: "Fredoka"; font-size: 1.15rem; line-height: 1.2; }
+  .store .s-ico { font-size: 1.7rem; }
+  .newsletter { display: flex; gap: 10px; justify-content: center; margin-top: 34px; flex-wrap: wrap; }
+  .newsletter input {
+    padding: 14px 20px; border-radius: 999px; border: none; min-width: 280px; font-size: 1rem; font-family: "Nunito";
+  }
+  .newsletter .btn { background: var(--sun); color: var(--ink); }
+  #nl-msg { margin-top: 12px; font-weight: 700; min-height: 1.5em; }
+
+  footer { padding: 50px 0 40px; color: var(--muted); }
+  footer .wrap { display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap; gap: 20px; }
+  footer .links { display: flex; gap: 22px; font-weight: 700; }
+
+  /* Reveal */
+  .reveal { opacity: 0; transform: translateY(24px); transition: opacity .6s ease, transform .6s ease; }
+  .reveal.in { opacity: 1; transform: none; }
+
+  @media (max-width: 900px) {
+    .hero .wrap, .mini { grid-template-columns: 1fr; }
+    .phone-stage { height: 460px; max-width: 420px; margin: 0 auto; width: 100%; }
+    .phone { width: 210px; height: 420px; }
+    .feat-grid { grid-template-columns: 1fr 1fr; }
+    .quotes { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+  @media (max-width: 560px) {
+    .feat-grid { grid-template-columns: 1fr; }
+    .stats { gap: 22px; }
+    .features { margin: 0 10px; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after { animation: none !important; transition: none !important; }
+    .reveal { opacity: 1; transform: none; }
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <a href="#" class="logo"><div class="logo-mark">V</div>VIVINO <span>GAMES</span></a>
+    <div class="nav-links">
+      <a href="#games">Games</a>
+      <a href="#why">Why Us</a>
+      <a href="#try">Try It</a>
+      <a href="#download">Download</a>
+    </div>
+    <a href="#download" class="btn btn-primary">Play Free</a>
+  </div>
+</nav>
+
+<!-- HERO -->
+<header class="hero">
+  <div class="blob a"></div><div class="blob b"></div>
+  <div class="wrap">
+    <div>
+      <span class="pill">🎉 New: Juice Jam season 2 is live!</span>
+      <h1>Little games.<br /><span class="grad">Big smiles.</span></h1>
+      <p>VIVINO GAMES makes bite-sized puzzles, merges, and arcade adventures you can pick up in seconds and play anywhere — on the bus, in line, or on the couch.</p>
+      <div class="hero-ctas">
+        <a href="#games" class="btn btn-primary">Explore Games →</a>
+        <a href="#try" class="btn btn-ghost">▶ Try a Demo</a>
+      </div>
+      <div class="stats">
+        <div class="stat"><b data-count="50">0</b><small>M+ players</small></div>
+        <div class="stat"><b data-count="12">0</b><small>Hit titles</small></div>
+        <div class="stat"><b>4.7★</b><small>Avg. rating</small></div>
+      </div>
+    </div>
+
+    <div class="phone-stage" aria-hidden="true">
+      <div class="phone p1"><div class="screen s1" id="gemScreen"><div class="hud"><span>⭐ 2,480</span><span>Lv 37</span></div></div></div>
+      <div class="phone p2"><div class="screen s2">
+        <div class="hud"><span>🪙 980</span><span>Merge!</span></div>
+        <div class="float-emoji" style="top:120px;left:30px">🍋</div>
+        <div class="float-emoji" style="top:200px;left:120px;animation-delay:.6s">🍉</div>
+        <div class="float-emoji" style="top:300px;left:40px;animation-delay:1.2s">🍇</div>
+        <div class="float-emoji" style="top:360px;left:140px;animation-delay:.3s">🍓</div>
+      </div></div>
+    </div>
+  </div>
+</header>
+
+<!-- GAMES -->
+<section id="games">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Our Games</h2>
+      <p>Free to play, easy to love. Find your next five-minute favorite.</p>
+    </div>
+    <div class="chips" role="tablist">
+      <button class="chip active" data-filter="all">All</button>
+      <button class="chip" data-filter="puzzle">Puzzle</button>
+      <button class="chip" data-filter="merge">Merge</button>
+      <button class="chip" data-filter="arcade">Arcade</button>
+      <button class="chip" data-filter="word">Word</button>
+    </div>
+    <div class="games" id="gameGrid"></div>
+  </div>
+</section>
+
+<!-- FEATURES -->
+<section id="why" class="features">
+  <div class="wrap">
+    <div class="section-head reveal">
+      <h2>Why players love VIVINO</h2>
+      <p>We sweat the details so every tap feels delightful.</p>
+    </div>
+    <div class="feat-grid">
+      <div class="feat reveal"><div class="ico" style="background:#ffb70333">⚡</div><h3>Instant Fun</h3><p>Jump in within seconds. No tutorials longer than a sneeze.</p></div>
+      <div class="feat reveal"><div class="ico" style="background:#2ec4b633">📴</div><h3>Play Offline</h3><p>No Wi-Fi? No problem. Every game works anywhere.</p></div>
+      <div class="feat reveal"><div class="ico" style="background:#e0457b33">🎁</div><h3>Daily Rewards</h3><p>Fresh challenges, streak bonuses, and seasonal events.</p></div>
+      <div class="feat reveal"><div class="ico" style="background:#4cc9f033">👨‍👩‍👧</div><h3>For Everyone</h3><p>Family-friendly design, colorblind modes, and one-hand play.</p></div>
+    </div>
+  </div>
+</section>
+
+<!-- MINI GAME -->
+<section id="try">
+  <div class="wrap mini">
+    <div class="reveal">
+      <span class="pill">🕹️ Playable demo</span>
+      <h2>Got 20 seconds?<br />Pop some bubbles.</h2>
+      <p>A tiny taste of <b>Bubble Bloom</b>. Tap the bubbles before they float away — golden ones are worth 5 points!</p>
+      <p style="font-size:1rem">Best score this session: <b id="best">0</b></p>
+    </div>
+    <div class="board-wrap reveal">
+      <div class="board-hud"><span>Score: <span id="score">0</span></span><span>⏱ <span id="time">20</span>s</span></div>
+      <div id="board">
+        <div class="board-overlay" id="overlay">
+          <div>
+            <h3 id="overlayTitle">Bubble Bloom</h3>
+            <p id="overlayText" style="color:var(--muted);margin-bottom:16px">Tap to pop. Ready?</p>
+            <button class="btn btn-primary" id="startBtn">Start ▶</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- TESTIMONIALS -->
+<section>
+  <div class="wrap">
+    <div class="section-head reveal"><h2>Players are saying…</h2></div>
+    <div class="quotes">
+      <div class="quote reveal"><div class="stars">★★★★★</div><p>"Juice Jam is my coffee-break ritual. Five minutes and I'm happy again."</p><div class="who"><div class="avatar" style="background:#ffe9c2">🦊</div>Sam K.</div></div>
+      <div class="quote reveal"><div class="stars">★★★★★</div><p>"Finally a puzzle game that doesn't nag me every two seconds. Clean and cute."</p><div class="who"><div class="avatar" style="background:#d6f5f1">🐢</div>Priya M.</div></div>
+      <div class="quote reveal"><div class="stars">★★★★★</div><p>"My kids and I compete on Word Garden every night. We're obsessed."</p><div class="who"><div class="avatar" style="background:#f3e1ff">🦉</div>Daniel R.</div></div>
+    </div>
+  </div>
+</section>
+
+<!-- CTA -->
+<section id="download">
+  <div class="wrap">
+    <div class="cta reveal">
+      <h2>Ready to play?</h2>
+      <p>All VIVINO GAMES titles are free to download on iOS and Android.</p>
+      <div class="stores">
+        <a href="#" class="store"><span class="s-ico"></span><div><small>Download on the</small><b>App Store</b></div></a>
+        <a href="#" class="store"><span class="s-ico">▶</span><div><small>Get it on</small><b>Google Play</b></div></a>
+      </div>
+      <form class="newsletter" id="nlForm">
+        <input type="email" placeholder="your@email.com" required aria-label="Email address" />
+        <button class="btn" type="submit">Get Early Access</button>
+      </form>
+      <div id="nl-msg"></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">
+    <div class="logo"><div class="logo-mark">V</div>VIVINO <span>GAMES</span></div>
+    <div class="links"><a href="#">About</a><a href="#">Careers</a><a href="#">Privacy</a><a href="#">Support</a></div>
+    <small>© 2026 VIVINO GAMES. All rights reserved.</small>
+  </div>
+</footer>
+
+<script>
+  // ---------- Game catalog ----------
+  const games = [
+    { name: "Juice Jam", cat: "puzzle", emoji: "🧃", bg: "linear-gradient(135deg,#ffcf66,#ff8fab)", desc: "Match-3 with a fruity twist. Squeeze combos into juicy power-ups.", rating: 4.8, isNew: true },
+    { name: "Merge Meadow", cat: "merge", emoji: "🌻", bg: "linear-gradient(135deg,#a8e6cf,#56c596)", desc: "Merge seeds into flowers and grow the coziest garden in town.", rating: 4.7 },
+    { name: "Bubble Bloom", cat: "arcade", emoji: "🫧", bg: "linear-gradient(135deg,#a0e7ff,#7b9cff)", desc: "Aim, pop, and chain bubbles across 2,000+ dreamy levels.", rating: 4.6 },
+    { name: "Word Garden", cat: "word", emoji: "🌱", bg: "linear-gradient(135deg,#d4f5c4,#8fd18a)", desc: "Swipe letters to grow words — and watch your garden bloom.", rating: 4.8 },
+    { name: "Block Bakery", cat: "puzzle", emoji: "🧁", bg: "linear-gradient(135deg,#ffd6e7,#c77dff)", desc: "Fit sweet treats onto the tray. A calm, clever block puzzler.", rating: 4.5 },
+    { name: "Hoppy Hop", cat: "arcade", emoji: "🐸", bg: "linear-gradient(135deg,#caffbf,#2ec4b6)", desc: "One-tap jumping across lily pads. How far can you hop?", rating: 4.4, isNew: true },
+    { name: "Merge Kitchen", cat: "merge", emoji: "🍳", bg: "linear-gradient(135deg,#ffe5b4,#ff9f68)", desc: "Combine ingredients into gourmet dishes and run your own diner.", rating: 4.6 },
+    { name: "Letter Lagoon", cat: "word", emoji: "🐠", bg: "linear-gradient(135deg,#bde0fe,#4cc9f0)", desc: "Dive into crosswords with sea-themed puzzles and pearls to collect.", rating: 4.5 },
+  ];
+  const catLabel = { puzzle: "🧩 Puzzle", merge: "🔀 Merge", arcade: "🕹️ Arcade", word: "🔤 Word" };
+  const grid = document.getElementById("gameGrid");
+  grid.innerHTML = games.map(g => `
+    <article class="game reveal" data-cat="${g.cat}">
+      <div class="game-art" style="background:${g.bg}">
+        <span class="tag">${catLabel[g.cat]}</span>
+        ${g.isNew ? '<span class="tag new">NEW</span>' : ""}
+        ${g.emoji}
+      </div>
+      <div class="game-body">
+        <h3>${g.name}</h3>
+        <p>${g.desc}</p>
+        <div class="game-meta">
+          <span class="rating">★ ${g.rating}</span>
+          <a href="#download" class="btn play-btn">Play</a>
+        </div>
+      </div>
+    </article>`).join("");
+
+  document.querySelectorAll(".chip").forEach(chip => chip.addEventListener("click", () => {
+    document.querySelectorAll(".chip").forEach(c => c.classList.remove("active"));
+    chip.classList.add("active");
+    const f = chip.dataset.filter;
+    document.querySelectorAll(".game").forEach(card =>
+      card.classList.toggle("hide", f !== "all" && card.dataset.cat !== f));
+  }));
+
+  // ---------- Hero gem grid ----------
+  const gemColors = ["#ff5d8f", "#ffb703", "#2ec4b6", "#7b2cbf", "#4cc9f0"];
+  const gemScreen = document.getElementById("gemScreen");
+  const gems = [];
+  for (let i = 0; i < 35; i++) {
+    const d = document.createElement("div");
+    d.className = "gem";
+    d.style.background = gemColors[Math.floor(Math.random() * gemColors.length)];
+    gemScreen.appendChild(d); gems.push(d);
+  }
+  setInterval(() => {
+    const g = gems[Math.floor(Math.random() * gems.length)];
+    g.style.transition = "background .4s";
+    g.style.background = gemColors[Math.floor(Math.random() * gemColors.length)];
+  }, 350);
+
+  // ---------- Reveal on scroll + counters ----------
+  const io = new IntersectionObserver(entries => entries.forEach(e => {
+    if (e.isIntersecting) { e.target.classList.add("in"); io.unobserve(e.target); }
+  }), { threshold: 0.12 });
+  document.querySelectorAll(".reveal").forEach(el => io.observe(el));
+
+  document.querySelectorAll("[data-count]").forEach(el => {
+    const target = +el.dataset.count; let n = 0;
+    const t = setInterval(() => { n++; el.textContent = n; if (n >= target) clearInterval(t); }, 1200 / target);
+  });
+
+  // ---------- Bubble mini-game ----------
+  const board = document.getElementById("board");
+  const overlay = document.getElementById("overlay");
+  const scoreEl = document.getElementById("score");
+  const timeEl = document.getElementById("time");
+  const bestEl = document.getElementById("best");
+  let score = 0, best = 0, timeLeft = 20, spawnTimer, clockTimer, running = false;
+  const bubbleColors = ["#ff8fab", "#a0e7ff", "#caffbf", "#d0b3ff", "#ffd6a5"];
+
+  function spawn() {
+    const size = 44 + Math.random() * 30;
+    const golden = Math.random() < 0.12;
+    const b = document.createElement("div");
+    b.className = "bubble";
+    b.style.width = b.style.height = size + "px";
+    b.style.left = Math.random() * (board.clientWidth - size) + "px";
+    b.style.top = board.clientHeight + "px";
+    b.style.background = golden ? "radial-gradient(circle at 30% 30%, #fff3b0, #ffb703)" : bubbleColors[Math.floor(Math.random() * bubbleColors.length)];
+    if (golden) b.textContent = "⭐";
+    const duration = 2600 + Math.random() * 2200;
+    const anim = b.animate([{ top: board.clientHeight + "px" }, { top: -size + "px" }], { duration, easing: "linear" });
+    anim.onfinish = () => b.remove();
+    b.addEventListener("pointerdown", () => {
+      if (!running || b.classList.contains("pop")) return;
+      score += golden ? 5 : 1; scoreEl.textContent = score;
+      anim.pause(); b.classList.add("pop");
+      setTimeout(() => b.remove(), 250);
+    });
+    board.appendChild(b);
+  }
+
+  function start() {
+    score = 0; timeLeft = 20; running = true;
+    scoreEl.textContent = 0; timeEl.textContent = 20;
+    overlay.style.display = "none";
+    spawnTimer = setInterval(spawn, 450);
+    clockTimer = setInterval(() => {
+      timeLeft--; timeEl.textContent = timeLeft;
+      if (timeLeft <= 0) end();
+    }, 1000);
+  }
+  function end() {
+    running = false; clearInterval(spawnTimer); clearInterval(clockTimer);
+    board.querySelectorAll(".bubble").forEach(b => b.remove());
+    best = Math.max(best, score); bestEl.textContent = best;
+    document.getElementById("overlayTitle").textContent = score >= 30 ? "🏆 Amazing!" : score >= 15 ? "🎉 Nice popping!" : "🫧 Good try!";
+    document.getElementById("overlayText").textContent = `You scored ${score} points.`;
+    document.getElementById("startBtn").textContent = "Play again ↻";
+    overlay.style.display = "grid";
+  }
+  document.getElementById("startBtn").addEventListener("click", start);
+
+  // ---------- Newsletter (demo only) ----------
+  document.getElementById("nlForm").addEventListener("submit", e => {
+    e.preventDefault();
+    document.getElementById("nl-msg").textContent = "🎉 Thanks! You're on the list.";
+    e.target.reset();
+  });
+</script>
+</body>
+</html>
